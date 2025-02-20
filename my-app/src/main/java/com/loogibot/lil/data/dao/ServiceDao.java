@@ -2,6 +2,7 @@ package com.loogibot.lil.data.dao;
 
 import java.sql.Statement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ import com.loogibot.lil.data.util.DatabaseUtils;
 public class ServiceDao implements Dao<Service, UUID>  {
   private static final Logger LOGGER = Logger.getLogger(ServiceDao.class.getName());
   private static final String GET_ALL = "select service_id, name, price from wisdom.services";
+  private static final String GET_BY_ID = "select service_id, name, price from wisdom.services where service_id = ?";
+  
 
   @Override
   public List<Service> getAll() {
@@ -45,7 +48,19 @@ public class ServiceDao implements Dao<Service, UUID>  {
   @Override
   public Optional<Service> getOne(UUID id) {
     // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getOne'");
+    try(PreparedStatement statement = DatabaseUtils.getConnection().prepareStatement(GET_BY_ID)){
+      statement.setObject(1, id);
+      ResultSet rs = statement.executeQuery();
+      List<Service> services = this.processResultSet(rs);
+      if(services.isEmpty()){
+        return Optional.empty();
+      }
+      return Optional.of(services.get(0));
+    } catch (SQLException e) {
+      // TODO: handle exception
+      DatabaseUtils.handleSqlException("ServiceDao.getOne", e, LOGGER);
+    }
+    return Optional.empty();
   }
 
   @Override
