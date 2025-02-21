@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import com.loogibot.lil.data.dao.CustomerDao;
 import com.loogibot.lil.data.dao.ServiceDao;
+import com.loogibot.lil.data.entity.Customer;
 import com.loogibot.lil.data.entity.Service;
 
 /**
@@ -33,5 +35,29 @@ public class App {
 
         serviceDao.delete(newService.getServiceId());
         System.out.println("\n *** DELETE *** \n");
+
+        //
+
+        CustomerDao customerDao = new CustomerDao();
+        List<Customer> customers = customerDao.getAll();
+        System.out.println("**** SERVICES ****");
+        System.out.println("\n *** GET_ALL ***");
+        customers.forEach(System.out::println);
+
+        Optional<Customer> customer = customerDao.getOne(customers.get(0).getCustomerId());
+        System.out.println("\n *** GET ONE ***\n" + service.get());
+
+        Customer newCustomer = new Customer();
+        newCustomer.setName("JoeyCastillo" + System.currentTimeMillis());
+        
+        newCustomer = customerDao.create(newCustomer);
+        System.out.println("\n *** CREATE ***\n" + newCustomer);
+
+        newCustomer = customerDao.update(newCustomer);
+        System.out.println("\n *** UPDATE *** \n" + newCustomer);
+
+        customerDao.delete(newCustomer.getCustomerId());
+        System.out.println("\n *** DELETE *** \n");
+
     }
 }

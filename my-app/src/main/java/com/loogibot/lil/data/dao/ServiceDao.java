@@ -109,7 +109,6 @@ public class ServiceDao implements Dao<Service, UUID> {
       }
       DatabaseUtils.handleSqlException("ServiceDao.update", e, LOGGER);
     }
-
     return this.getOne(entity.getServiceId()).get();
   }
 
