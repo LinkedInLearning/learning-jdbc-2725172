@@ -1,5 +1,6 @@
 package com.loogibot.lil;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,5 +20,12 @@ public class App {
 
         Optional<Service> service = serviceDao.getOne(services.get(0).getServiceId());
         System.out.println("\n *** GET ONE ***\n" + service.get());
+
+        Service newService = new Service();
+        newService.setName("FooBarBaz" + System.currentTimeMillis());
+        newService.setPrice(new BigDecimal(4.35));
+        newService = serviceDao.create(newService);
+        System.out.println("\n *** CREATE ***\n" + newService);
+
     }
 }
