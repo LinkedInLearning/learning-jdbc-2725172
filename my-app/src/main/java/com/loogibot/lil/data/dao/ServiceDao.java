@@ -22,6 +22,7 @@ public class ServiceDao implements Dao<Service, UUID> {
   private static final String GET_BY_ID = "select service_id, name, price from wisdom.services where service_id = ?";
   private static final String CREATE = "insert into wisdom.services (service_id, name, price) values (?,?,?)";
   private static final String UPDATE = "update wisdom.services set name = ?, price = ? where service_id = ?";
+  private static final String DELETE = "delete from wisdom.services where service_id = ?";
 
   @Override
   public List<Service> getAll() {
@@ -55,7 +56,7 @@ public class ServiceDao implements Dao<Service, UUID> {
       connection.commit();
       statement.close();
     } catch (SQLException e) {
-      try{
+      try {
         connection.rollback();
       } catch (SQLException sqle) {
         DatabaseUtils.handleSqlException("ServiceDao.create.rollback", sqle, LOGGER);
@@ -63,7 +64,7 @@ public class ServiceDao implements Dao<Service, UUID> {
       DatabaseUtils.handleSqlException("ServiceDao.create", e, LOGGER);
     }
     Optional<Service> service = this.getOne(serviceId);
-    if (!service.isPresent()){
+    if (!service.isPresent()) {
       return null;
     }
     return service.get();
@@ -115,7 +116,23 @@ public class ServiceDao implements Dao<Service, UUID> {
   @Override
   public void delete(UUID id) {
     // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    Connection connection = DatabaseUtils.getConnection();
+
+    try {
+      connection.setAutoCommit(false);
+      PreparedStatement statement = connection.prepareStatement(DELETE);
+      statement.setObject(1, id);
+      statement.execute();
+      connection.commit();
+      statement.close();
+    } catch (SQLException e) {
+      try {
+        connection.rollback();
+      } catch (SQLException sqle) {
+        DatabaseUtils.handleSqlException("ServiceDao.delete.rollback", sqle, LOGGER);
+      }
+      DatabaseUtils.handleSqlException("ServiceDao.delete", e, LOGGER);
+    }
   }
 
   private List<Service> processResultSet(ResultSet rs) throws SQLException {
