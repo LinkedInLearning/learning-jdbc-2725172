@@ -21,6 +21,7 @@ public class ServiceDao implements Dao<Service, UUID> {
   private static final String GET_ALL = "select service_id, name, price from wisdom.services";
   private static final String GET_BY_ID = "select service_id, name, price from wisdom.services where service_id = ?";
   private static final String CREATE = "insert into wisdom.services (service_id, name, price) values (?,?,?)";
+  private static final String UPDATE = "update wisdom.services set name = ?, price = ? where service_id = ?";
 
   @Override
   public List<Service> getAll() {
@@ -89,7 +90,26 @@ public class ServiceDao implements Dao<Service, UUID> {
   @Override
   public Service update(Service entity) {
     // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'update'");
+    Connection connection = DatabaseUtils.getConnection();
+    try {
+      connection.setAutoCommit(false);
+      PreparedStatement statement = connection.prepareStatement(UPDATE);
+      statement.setString(1, entity.getName());
+      statement.setBigDecimal(2, entity.getPrice());
+      statement.setObject(3, entity.getServiceId());
+      statement.execute();
+      connection.commit();
+      statement.close();
+    } catch (SQLException e) {
+      try {
+        connection.rollback();
+      } catch (SQLException sqle) {
+        DatabaseUtils.handleSqlException("ServiceDao.update.rollback", sqle, LOGGER);
+      }
+      DatabaseUtils.handleSqlException("ServiceDao.update", e, LOGGER);
+    }
+
+    return this.getOne(entity.getServiceId()).get();
   }
 
   @Override
