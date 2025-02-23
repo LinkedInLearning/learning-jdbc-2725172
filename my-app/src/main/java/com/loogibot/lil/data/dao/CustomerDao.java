@@ -44,7 +44,10 @@ public class CustomerDao implements Dao<Customer, UUID> {
       connection.setAutoCommit(false);
       PreparedStatement statement = connection.prepareStatement(CREATE);
       statement.setObject(1, customerId);
-      statement.setString(2, entity.getName());
+      statement.setString(2, entity.getFirst_name());
+      statement.setString(3, entity.getLast_name());
+      statement.setString(4, entity.getEmail());
+      statement.setString(5, entity.getPhone());
       statement.execute();
       connection.commit();
       statement.close();
@@ -86,8 +89,11 @@ public class CustomerDao implements Dao<Customer, UUID> {
     try {
       connection.setAutoCommit(false);
       PreparedStatement statement = connection.prepareStatement(UPDATE);
-      statement.setString(1, entity.getName());
-      statement.setObject(3, entity.getCustomerId());
+      statement.setObject(1, entity.getCustomerId());
+      statement.setString(2, entity.getFirst_name());
+      statement.setString(3, entity.getLast_name());
+      statement.setString(4, entity.getEmail());
+      statement.setString(5, entity.getPhone());
       statement.execute();
       connection.commit();
       statement.close();
@@ -128,11 +134,12 @@ public class CustomerDao implements Dao<Customer, UUID> {
     while (rs.next()) {
       Customer customer = new Customer();
       customer.setCustomerId((UUID) rs.getObject("service_id"));
-      customer.setName(rs.getString("name"));
-    
+      customer.setFirst_name(rs.getString("first_name"));
+      customer.setLast_name(rs.getString("last_name"));
+      customer.setEmail(rs.getString("email"));
+      customer.setPhone(rs.getString("phone"));
       customers.add(customer);
     }
     return customers;
   }
-
 }
