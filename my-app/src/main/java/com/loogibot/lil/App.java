@@ -16,7 +16,7 @@ public class App {
     public static void main(String[] args) {
         ServiceDao serviceDao = new ServiceDao();
         List<Service> services = serviceDao.getAll();
-        System.out.println("**** SERVICES ****");
+        System.out.println("**** SERVICES BELOW ****");
         System.out.println("\n *** GET_ALL ***");
         services.forEach(System.out::println);
 
@@ -40,12 +40,12 @@ public class App {
 
         CustomerDao customerDao = new CustomerDao();
         List<Customer> customers = customerDao.getAll();
-        System.out.println("**** SERVICES ****");
+        System.out.println("**** CUSTOMERS BELOW ****");
         System.out.println("\n *** GET_ALL ***");
         customers.forEach(System.out::println);
 
         Optional<Customer> customer = customerDao.getOne(customers.get(0).getCustomerId());
-        System.out.println("\n *** GET ONE ***\n" + service.get());
+        System.out.println("\n *** GET ONE ***\n" + customer.get());
 
         Customer newCustomer = new Customer();
         newCustomer.setFirst_name("Joey" + System.currentTimeMillis());

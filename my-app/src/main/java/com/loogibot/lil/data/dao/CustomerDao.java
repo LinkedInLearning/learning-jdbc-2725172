@@ -17,10 +17,10 @@ import com.loogibot.lil.data.util.DatabaseUtils;
 public class CustomerDao implements Dao<Customer, UUID> {
 
   private static final Logger LOGGER = Logger.getLogger(CustomerDao.class.getName());
-  private static final String GET_ALL = "select customer_id, first_name wisdom.customers";
-  private static final String GET_BY_ID = "select customer_id, first_name from wisdom.customers where customer_id = ?";
-  private static final String CREATE = "insert into wisdom.customers (customer_id, name) values (?,?)";
-  private static final String UPDATE = "update wisdom.customers set name = ?, where customer_id = ?";
+  private static final String GET_ALL = "select customer_id, first_name, last_name, email, phone from wisdom.customers";
+  private static final String GET_BY_ID = "select customer_id, last_name, first_name, email, phone from wisdom.customers where customer_id = ?";
+  private static final String CREATE = "insert into wisdom.customers (customer_id, last_name, first_name, email, phone) values (?,?,?,?,?)";
+  private static final String UPDATE = "update wisdom.customers set first_name = ?, last_name = ?, email = ?, phone = ? where customer_id = ?";
   private static final String DELETE = "delete from wisdom.customers where customer_id = ?";
 
   @Override
@@ -30,6 +30,7 @@ public class CustomerDao implements Dao<Customer, UUID> {
     try (Statement statement = connection.createStatement()) {
       ResultSet rs = statement.executeQuery(GET_ALL);
       customers = this.processResultSet(rs);
+      rs.close();
     } catch (SQLException e) {
       DatabaseUtils.handleSqlException("CustomerDao.getAll", e, LOGGER);
     }
@@ -89,11 +90,12 @@ public class CustomerDao implements Dao<Customer, UUID> {
     try {
       connection.setAutoCommit(false);
       PreparedStatement statement = connection.prepareStatement(UPDATE);
-      statement.setObject(1, entity.getCustomerId());
-      statement.setString(2, entity.getFirst_name());
-      statement.setString(3, entity.getLast_name());
-      statement.setString(4, entity.getEmail());
-      statement.setString(5, entity.getPhone());
+      // statement.setObject(1, entity.getCustomerId());
+      statement.setString(1, entity.getFirst_name());
+      statement.setString(2, entity.getLast_name());
+      statement.setString(3, entity.getEmail());
+      statement.setString(4, entity.getPhone());
+      statement.setObject(5, entity.getCustomerId());
       statement.execute();
       connection.commit();
       statement.close();
@@ -133,7 +135,7 @@ public class CustomerDao implements Dao<Customer, UUID> {
     List<Customer> customers = new ArrayList<>();
     while (rs.next()) {
       Customer customer = new Customer();
-      customer.setCustomerId((UUID) rs.getObject("service_id"));
+      customer.setCustomerId((UUID) rs.getObject("customer_id"));
       customer.setFirst_name(rs.getString("first_name"));
       customer.setLast_name(rs.getString("last_name"));
       customer.setEmail(rs.getString("email"));
