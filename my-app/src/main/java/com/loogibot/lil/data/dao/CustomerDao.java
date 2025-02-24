@@ -17,11 +17,11 @@ import com.loogibot.lil.data.util.DatabaseUtils;
 public class CustomerDao implements Dao<Customer, UUID> {
 
   private static final Logger LOGGER = Logger.getLogger(CustomerDao.class.getName());
-  private static final String GET_ALL = "select customer_id, name wisdom.services";
-  private static final String GET_BY_ID = "select customer_id, name from wisdom.services where customer_id = ?";
-  private static final String CREATE = "insert into wisdom.services (customer_id, name) values (?,?)";
-  private static final String UPDATE = "update wisdom.services set name = ?, where customer_id = ?";
-  private static final String DELETE = "delete from wisdom.services where customer_id = ?";
+  private static final String GET_ALL = "select customer_id, first_name wisdom.customers";
+  private static final String GET_BY_ID = "select customer_id, first_name from wisdom.customers where customer_id = ?";
+  private static final String CREATE = "insert into wisdom.customers (customer_id, name) values (?,?)";
+  private static final String UPDATE = "update wisdom.customers set name = ?, where customer_id = ?";
+  private static final String DELETE = "delete from wisdom.customers where customer_id = ?";
 
   @Override
   public List<Customer> getAll() {

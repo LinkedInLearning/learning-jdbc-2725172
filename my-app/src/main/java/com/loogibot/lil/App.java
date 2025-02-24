@@ -48,7 +48,10 @@ public class App {
         System.out.println("\n *** GET ONE ***\n" + service.get());
 
         Customer newCustomer = new Customer();
-        newCustomer.setName("JoeyCastillo" + System.currentTimeMillis());
+        newCustomer.setFirst_name("Joey" + System.currentTimeMillis());
+        newCustomer.setLast_name("Castillo" + System.currentTimeMillis());
+        newCustomer.setEmail("Joey@Castillo.com" + System.currentTimeMillis());
+        newCustomer.setPhone("5552746" + System.currentTimeMillis());
         
         newCustomer = customerDao.create(newCustomer);
         System.out.println("\n *** CREATE ***\n" + newCustomer);
