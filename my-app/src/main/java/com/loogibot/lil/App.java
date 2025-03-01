@@ -3,9 +3,11 @@ package com.loogibot.lil;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import com.loogibot.lil.data.dao.CustomerDao;
 import com.loogibot.lil.data.dao.ServiceDao;
+import com.loogibot.lil.data.dao.SimpleProductDao;
 import com.loogibot.lil.data.entity.Customer;
 import com.loogibot.lil.data.entity.Service;
 
@@ -52,7 +54,7 @@ public class App {
         newCustomer.setLast_name("Castillo" + System.currentTimeMillis());
         newCustomer.setEmail("Joey@Castillo.com" + System.currentTimeMillis());
         newCustomer.setPhone("5552746" + System.currentTimeMillis());
-        
+
         newCustomer = customerDao.create(newCustomer);
         System.out.println("\n *** CREATE ***\n" + newCustomer);
 
@@ -62,5 +64,19 @@ public class App {
         customerDao.delete(newCustomer.getCustomerId());
         System.out.println("\n *** DELETE *** \n");
 
+        System.out.println("**** Simple Product BELOW ****");
+        SimpleProductDao spdao = new SimpleProductDao();
+        UUID productId = spdao.createProduct("Zafa", new BigDecimal(83.76), "Jaloo");
+        System.out.println(productId);
+
+        System.out.println("**** LIMIT ****");
+        serviceDao.getAllLimit(2).forEach(System.out::println);
+
+        System.out.println("**** PAGED ****");
+
+        for(int i = 1; i<11; i++){
+            System.out.println("Page numbe: " + i);
+            customerDao.getAllPaged(i, 10).forEach(System.out::println);
+        }
     }
 }
