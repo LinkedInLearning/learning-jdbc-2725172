@@ -3,17 +3,17 @@ volumes:
   postgres-data:
 services:
   app:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
-    environment:     
-        POSTGRES_PASSWORD: P@ssw0rd!
-        POSTGRES_USER: localdbuser
-        POSTGRES_DB: localdb
-        POSTGRES_HOSTNAME: db
+    environment:
+      POSTGRES_PASSWORD: P@ssw0rd!
+      POSTGRES_USER: localdbuser
+      POSTGRES_DB: localdb
+      POSTGRES_HOSTNAME: db
 
     volumes:
-      - ../..:/workspaces:cached      
+      - ../..:/workspaces:cached
     command: sleep infinity
     depends_on:
       - db
