@@ -3,7 +3,6 @@ volumes:
   postgres-data:
 services:
   app:
-    container_name: javadev
     build: 
       context: .
       dockerfile: Dockerfile
@@ -11,16 +10,18 @@ services:
         POSTGRES_PASSWORD: P@ssw0rd!
         POSTGRES_USER: localdbuser
         POSTGRES_DB: localdb
-        POSTGRES_HOSTNAME: postgresdb
+        POSTGRES_HOSTNAME: db
 
     volumes:
       - ../..:/workspaces:cached      
     command: sleep infinity
-    network_mode: service:db
+    depends_on:
+      - db
   db:
-    container_name: postgresdb
     image: postgres:latest
     restart: unless-stopped
+    ports:
+      - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
