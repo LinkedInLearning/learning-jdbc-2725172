@@ -1,26 +1,27 @@
-version: '3.8'
 volumes:
   postgres-data:
 services:
   app:
-    container_name: javadev
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
-    environment:     
-        POSTGRES_PASSWORD: P@ssw0rd!
-        POSTGRES_USER: localdbuser
-        POSTGRES_DB: localdb
-        POSTGRES_HOSTNAME: postgresdb
+    environment:
+      POSTGRES_PASSWORD: P@ssw0rd!
+      POSTGRES_USER: localdbuser
+      POSTGRES_DB: localdb
+      POSTGRES_HOSTNAME: db
 
     volumes:
-      - ../..:/workspaces:cached      
+      - ../..:/workspaces:cached
     command: sleep infinity
-    network_mode: service:db
+    depends_on:
+      - db
   db:
-    container_name: postgresdb
-    image: postgres:latest
+    image: postgres:17
+    pull_policy: if_not_present
     restart: unless-stopped
+    ports:
+      - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
