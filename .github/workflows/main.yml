@@ -1,14 +1,26 @@
-name: Copy To Branches
+name: Sync shared files
+
 on:
   workflow_dispatch:
+    inputs:
+      source-branch:
+        description: "Source branch to copy files from (blank = default branch)"
+        required: false
+        default: ""
+      files:
+        description: "Comma or newline separated list of files/dirs/globs to copy (blank = default list)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write       # required for push mode
+  pull-requests: write  # required for pr mode
+
 jobs:
-  copy-to-branches:
+  sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: LinkedInLearning/lil-update-branches@v1.0.1
         with:
-          fetch-depth: 0
-      - name: Copy To Branches Action
-        uses: planetoftheweb/copy-to-branches@v1.2
-        env:
-          key: main
+          source-branch: ${{ inputs.source-branch }}
+          files: ${{ inputs.files }}
